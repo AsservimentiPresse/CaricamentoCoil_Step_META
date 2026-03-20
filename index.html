@@ -3,12 +3,11 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>ASSIEME - AR Viewer</title>
+<title>ASSIEME - STEP PUZZLE</title>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 <style>
-
 body{
 margin:0;
 background:#000;
@@ -23,8 +22,6 @@ model-viewer{
 width:95vw;
 height:75vh;
 }
-
-/* CONTROLLI */
 
 .controls-section{
 display:flex;
@@ -74,7 +71,6 @@ border-radius:12px;
 border:none;
 background:#444;
 color:white;
-font-size:1.1rem;
 cursor:pointer;
 }
 
@@ -94,7 +90,6 @@ color:white;
 .darkgray{background:dimgray;}
 .red{background:red;}
 .orange{background:orange;}
-
 </style>
 
 </head>
@@ -111,38 +106,48 @@ orientation="180deg 180deg 0deg"
 shadow-intensity="0"
 exposure="0.5"> </model-viewer>
 
-<!-- STEP BUTTONS -->
+<!-- STEP -->
 
 <div class="controls-section">
-
 <h3>Steps</h3>
 
 <div class="controls">
 
-<button id="step0" class="animButton" onclick="goToStep(0)">
-<img src="anim1.png">
-</button>
-
-<button id="step1" class="animButton" onclick="goToStep(1)">
-<img src="anim2.png">
-</button>
-
-<button id="step2" class="animButton" onclick="goToStep(2)">
-<img src="anim3.png">
-</button>
-
-<button id="step3" class="animButton" onclick="goToStep(3)">
-<img src="anim4.png">
-</button>
-
-<button id="step4" class="animButton" onclick="goToStep(4)">
-<img src="anim5.png">
-</button>
+<button id="step0" class="animButton" onclick="goToStep(0)"><img src="anim1.png"></button> <button id="step1" class="animButton" onclick="goToStep(1)"><img src="anim2.png"></button> <button id="step2" class="animButton" onclick="goToStep(2)"><img src="anim3.png"></button> <button id="step3" class="animButton" onclick="goToStep(3)"><img src="anim4.png"></button> <button id="step4" class="animButton" onclick="goToStep(4)"><img src="anim5.png"></button>
 
 <button class="reset" onclick="resetAll()">RESET</button>
 
 </div>
+</div>
 
+<!-- COLORI STRUCTURE -->
+
+<div class="controls-section">
+<h3>Structure Color</h3>
+
+<div class="controls">
+<button class="color green" onclick="changeColor(0,[0,0.1,0,1])">Verde</button>
+<button class="color blue" onclick="changeColor(0,[0,0,0.18,1])">Blu</button>
+<button class="color orange" onclick="changeColor(0,[1,0.12,0,1])">Arancio</button>
+<button class="color lightgray" onclick="changeColor(0,[0.55,0.55,0.55,1])">Grigio</button>
+<button class="color darkgray" onclick="changeColor(0,[0.25,0.25,0.25,1])">Scuro</button>
+<button class="color red" onclick="changeColor(0,[0.22,0,0,1])">Rosso</button>
+</div>
+</div>
+
+<!-- COLORI MOBILE -->
+
+<div class="controls-section">
+<h3>Mobile Parts</h3>
+
+<div class="controls">
+<button class="color green" onclick="changeColor(2,[0,0.1,0,1])">Verde</button>
+<button class="color blue" onclick="changeColor(2,[0,0,1,1])">Blu</button>
+<button class="color yellow" onclick="changeColor(2,[1,1,0,1])">Giallo</button>
+<button class="color lightgray" onclick="changeColor(2,[0.55,0.55,0.55,1])">Grigio</button>
+<button class="color darkgray" onclick="changeColor(2,[0.33,0.33,0.33,1])">Scuro</button>
+<button class="color red" onclick="changeColor(2,[1,0,0,1])">Rosso</button>
+</div>
 </div>
 
 <script>
@@ -153,84 +158,62 @@ let animations=[]
 let currentStep=0
 
 modelViewer.addEventListener("load",()=>{
-  animations=modelViewer.availableAnimations
+animations=modelViewer.availableAnimations
 })
 
-/* ===============================
-   🔥 QUI DEVI INSERIRE I SECONDI
-   ===============================
-
-   ESEMPIO:
-   0 = stato iniziale
-   1.2 = fine step 1
-   2.5 = fine step 2
-   ecc...
-
-   👉 CAMBIA QUESTI VALORI!
-*/
-
-let stepTimes = [
-  0,    // STEP 0 (inizio)
-  5,    // STEP 1  <-- MODIFICA QUI
-  9,    // STEP 2  <-- MODIFICA QUI
-  13,    // STEP 3  <-- MODIFICA QUI
-  15     // STEP 4  <-- MODIFICA QUI
-]
-
-/* =============================== */
+/* 🔥 METTI QUI I TUOI SECONDI */
+let stepTimes = [0, 100, 2, 300, 4]
 
 function goToStep(step){
 
-  if(!animations.length) return
+if(!animations.length) return
 
-  const anim = animations[0]
+const anim = animations[0]
 
-  modelViewer.animationName = anim
-  modelViewer.play()
+// 🔥 FORZA SEMPRE LA STESSA ANIMAZIONE
+modelViewer.animationName = anim
 
-  const targetTime = stepTimes[step]
+modelViewer.play()
 
-  const interval = setInterval(()=>{
+const targetTime = stepTimes[step]
 
-    if(modelViewer.currentTime >= targetTime){
-      modelViewer.pause()
-      clearInterval(interval)
-    }
+const interval = setInterval(()=>{
 
-  }, 16)
+if(modelViewer.currentTime >= targetTime){
+modelViewer.pause()
+clearInterval(interval)
+}
 
-  updateButtons(step)
-  currentStep = step
+},16)
+
+updateButtons(step)
+currentStep = step
 }
 
 function updateButtons(activeStep){
 
-  for(let i=0;i<stepTimes.length;i++){
-    const b=document.getElementById("step"+i)
-    if(b) b.classList.remove("active")
-  }
-
-  const active=document.getElementById("step"+activeStep)
-  if(active) active.classList.add("active")
+for(let i=0;i<stepTimes.length;i++){
+const b=document.getElementById("step"+i)
+if(b) b.classList.remove("active")
 }
 
-/* RESET */
+const active=document.getElementById("step"+activeStep)
+if(active) active.classList.add("active")
+}
 
 function resetAll(){
 
-  if(!animations.length) return
+if(!animations.length) return
 
-  const anim = animations[0]
+const anim = animations[0]
 
-  modelViewer.animationName = anim
-  modelViewer.currentTime = 0
-  modelViewer.pause()
+modelViewer.animationName = anim
+modelViewer.currentTime = 0
+modelViewer.pause()
 
-  currentStep = 0
-  updateButtons(0)
+currentStep = 0
+updateButtons(0)
 }
-
-/* COLORI (UGUALE A PRIMA) */
 
 function changeColor(materialIndex,rgba){
 
@@ -246,3 +229,4 @@ material.pbrMetallicRoughness.setBaseColorFactor(rgba)
 
 </body>
 </html>
+
