@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>ASSIEME - AR Viewer</title>
+<title>ASSIEME - STEP PUZZLE</title>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
@@ -24,15 +24,6 @@ width:95vw;
 height:75vh;
 }
 
-/* AR button */
-
-model-viewer::part(default-ar-button){
-width:110px;
-height:110px;
-border-radius:50%;
-background:white;
-}
-
 /* CONTROLLI */
 
 .controls-section{
@@ -42,53 +33,36 @@ margin:12px 0;
 width:95vw;
 }
 
-.controls-section h3{
-margin-right:15px;
-font-size:1.6rem;
-min-width:170px;
-}
-
 .controls{
 display:flex;
 flex-wrap:wrap;
 gap:15px;
 }
 
-/* BOTTONI IMMAGINE */
+/* BOTTONI */
 
 .animButton{
-
 width:90px;
 height:90px;
-
 border:none;
 border-radius:14px;
 overflow:hidden;
 cursor:pointer;
-
 background:#333;
-
 display:flex;
 align-items:center;
 justify-content:center;
-
 }
 
 .animButton img{
-
 width:100%;
 height:100%;
 object-fit:cover;
-
 }
-
-/* pulsante attivo */
 
 .animButton.active{
 outline:4px solid white;
 }
-
-/* reset */
 
 .reset{
 padding:14px 24px;
@@ -96,28 +70,8 @@ border-radius:12px;
 border:none;
 background:#444;
 color:white;
-font-size:1.1rem;
 cursor:pointer;
 }
-
-/* COLORI */
-
-button.color{
-padding:12px 22px;
-border:none;
-border-radius:12px;
-cursor:pointer;
-font-size:1rem;
-color:white;
-}
-
-.green{background:green;}
-.blue{background:blue;}
-.yellow{background:yellow;color:black;}
-.lightgray{background:lightgray;color:black;}
-.darkgray{background:dimgray;}
-.red{background:red;}
-.orange{background:orange;}
 
 </style>
 
@@ -131,67 +85,35 @@ src="linea lunga PROVA ANIMAZIONI.glb"
 ar
 ar-modes="webxr scene-viewer quick-look"
 camera-controls
-orientation="180deg 180deg 0deg"
+orientation="0deg 180deg 0deg"
 shadow-intensity="0"
 exposure="0.5"> </model-viewer>
 
-<!-- ANIMAZIONI -->
-
 <div class="controls-section">
-
-<h3>Animations</h3>
 
 <div class="controls">
 
-<button id="anim0" class="animButton" onclick="toggleAnimation(0)">
+<button id="step0" class="animButton" onclick="goToStep(0)">
 <img src="anim1.png">
 </button>
 
-<button id="anim1" class="animButton" onclick="toggleAnimation(1)">
+<button id="step1" class="animButton" onclick="goToStep(1)">
 <img src="anim2.png">
 </button>
 
-<button id="anim2" class="animButton" onclick="toggleAnimation(2)">
+<button id="step2" class="animButton" onclick="goToStep(2)">
 <img src="anim3.png">
 </button>
 
-<button id="anim3" class="animButton" onclick="toggleAnimation(3)">
+<button id="step3" class="animButton" onclick="goToStep(3)">
 <img src="anim4.png">
 </button>
 
-<button id="anim4" class="animButton" onclick="toggleAnimation(4)">
+<button id="step4" class="animButton" onclick="goToStep(4)">
 <img src="anim5.png">
 </button>
 
-<button class="reset" onclick="resetAnimations()">RESET</button>
-
-</div>
-
-</div>
-
-<!-- STRUCTURE COLOR -->
-
-<div class="controls-section">
-
-<h3>Structure Color</h3>
-
-<div class="controls">
-
-<button class="color green" onclick="changeColor(0,[0,0.1,0,1])">Verde</button> <button class="color blue" onclick="changeColor(0,[0,0,0.18,1])">Blu</button> <button class="color orange" onclick="changeColor(0,[1,0.12,0,1])">Arancio</button> <button class="color lightgray" onclick="changeColor(0,[0.55,0.55,0.55,1])">Grigio chiaro</button> <button class="color darkgray" onclick="changeColor(0,[0.25,0.25,0.25,1])">Grigio scuro</button> <button class="color red" onclick="changeColor(0,[0.22,0,0,1])">Rosso</button>
-
-</div>
-
-</div>
-
-<!-- MOBILE PARTS -->
-
-<div class="controls-section">
-
-<h3>Mobile Parts Color</h3>
-
-<div class="controls">
-
-<button class="color green" onclick="changeColor(2,[0,0.1,0,1])">Verde</button> <button class="color blue" onclick="changeColor(2,[0,0,1,1])">Blu</button> <button class="color yellow" onclick="changeColor(2,[1,1,0,1])">Giallo</button> <button class="color lightgray" onclick="changeColor(2,[0.55,0.55,0.55,1])">Grigio chiaro</button> <button class="color darkgray" onclick="changeColor(2,[0.33,0.33,0.33,1])">Grigio scuro</button> <button class="color red" onclick="changeColor(2,[1,0,0,1])">Rosso</button>
+<button class="reset" onclick="resetAll()">RESET</button>
 
 </div>
 
@@ -199,94 +121,67 @@ exposure="0.5"> </model-viewer>
 
 <script>
 
-const modelViewer=document.querySelector("#viewer")
+const modelViewer = document.querySelector("#viewer")
 
-let animations=[]
-let currentAnimation=null
+let animations = []
+let currentStep = 0
 
-modelViewer.addEventListener("load",()=>{
+// ⚠️ DA PERSONALIZZARE
+let stepTimes = [0, 1, 2, 3, 4]
 
-animations=modelViewer.availableAnimations
-
+modelViewer.addEventListener("load", ()=>{
+  animations = modelViewer.availableAnimations
 })
 
-function toggleAnimation(index){
+function goToStep(step){
 
-if(!animations[index]) return
+  if(!animations.length) return
 
-const anim=animations[index]
+  const anim = animations[0]
 
-const button=document.getElementById("anim"+index)
+  modelViewer.animationName = anim
 
-/* stessa animazione */
+  modelViewer.play()
 
-if(currentAnimation===anim){
+  const targetTime = stepTimes[step]
 
-if(modelViewer.paused){
+  const interval = setInterval(()=>{
 
-modelViewer.play()
-button.classList.add("active")
+    if(modelViewer.currentTime >= targetTime){
+      modelViewer.pause()
+      clearInterval(interval)
+    }
 
-}else{
+  }, 16)
 
-modelViewer.pause()
-button.classList.remove("active")
+  updateButtons(step)
+  currentStep = step
+}
+
+function updateButtons(activeStep){
+
+  for(let i=0;i<stepTimes.length;i++){
+    const b = document.getElementById("step"+i)
+    if(b) b.classList.remove("active")
+  }
+
+  const active = document.getElementById("step"+activeStep)
+  if(active) active.classList.add("active")
 
 }
 
-}else{
+function resetAll(){
 
-clearButtons()
+  if(!animations.length) return
 
-currentAnimation=anim
+  const anim = animations[0]
 
-modelViewer.animationName=anim
-modelViewer.play()
+  modelViewer.animationName = anim
+  modelViewer.currentTime = 0
+  modelViewer.pause()
 
-button.classList.add("active")
-
-}
-
-}
-
-/* reset */
-
-function resetAnimations(){
-
-modelViewer.pause()
-modelViewer.currentTime=0
-
-currentAnimation=null
-
-clearButtons()
-
-}
-
-/* clear pulsanti */
-
-function clearButtons(){
-
-for(let i=0;i<5;i++){
-
-const b=document.getElementById("anim"+i)
-
-if(b) b.classList.remove("active")
-
-}
-
-}
-
-/* cambio colore */
-
-function changeColor(materialIndex,rgba){
-
-const material=modelViewer.model.materials[materialIndex]
-
-if(material && material.pbrMetallicRoughness){
-
-material.pbrMetallicRoughness.setBaseColorFactor(rgba)
-
-}
+  currentStep = 0
+  updateButtons(0)
 
 }
 
