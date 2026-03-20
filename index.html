@@ -152,7 +152,7 @@ exposure="0.5"> </model-viewer>
 id="timelineSlider"
 class="timeline-slider"
 min="0"
-max="5"   <!-- 🔥 CAMBIA QUESTO con durata animazione -->
+max="20"   <!-- 🔥 CAMBIA QUESTO con durata animazione -->
 step="0.01"
 value="0">
 
@@ -178,7 +178,7 @@ let animations=[]
 let currentStep=0
 
 /* 🔥 METTI QUI I TUOI STEP (secondi reali) */
-let stepTimes=[5,10,20,30,40]
+let stepTimes=[4,5,10,20,30,40]
 
 modelViewer.addEventListener("load",()=>{
 animations=modelViewer.availableAnimations
