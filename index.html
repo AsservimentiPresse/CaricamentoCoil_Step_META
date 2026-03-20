@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>ASSIEME - STEP PUZZLE</title>
+<title>ASSIEME - STEP + TIMELINE</title>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
@@ -28,12 +28,6 @@ display:flex;
 align-items:center;
 margin:12px 0;
 width:95vw;
-}
-
-.controls-section h3{
-margin-right:15px;
-font-size:1.6rem;
-min-width:170px;
 }
 
 .controls{
@@ -74,6 +68,33 @@ color:white;
 cursor:pointer;
 }
 
+/* 🔥 SLIDER STYLE */
+.timeline-container{
+display:none;
+flex-direction:column;
+align-items:center;
+width:90%;
+margin-top:10px;
+}
+
+.timeline-container.active{
+display:flex;
+}
+
+.timeline-slider{
+width:100%;
+}
+
+.timeline-button{
+margin-top:10px;
+padding:10px 20px;
+background:#666;
+border:none;
+border-radius:10px;
+color:white;
+cursor:pointer;
+}
+
 button.color{
 padding:12px 22px;
 border:none;
@@ -90,6 +111,7 @@ color:white;
 .darkgray{background:dimgray;}
 .red{background:red;}
 .orange{background:orange;}
+
 </style>
 
 </head>
@@ -106,114 +128,134 @@ orientation="180deg 180deg 0deg"
 shadow-intensity="0"
 exposure="0.5"> </model-viewer>
 
-<!-- STEP -->
+<!-- STEP BUTTONS -->
 
 <div class="controls-section">
-<h3>Steps</h3>
-
 <div class="controls">
 
-<button id="step0" class="animButton" onclick="goToStep(0)"><img src="anim1.png"></button> <button id="step1" class="animButton" onclick="goToStep(1)"><img src="anim2.png"></button> <button id="step2" class="animButton" onclick="goToStep(2)"><img src="anim3.png"></button> <button id="step3" class="animButton" onclick="goToStep(3)"><img src="anim4.png"></button> <button id="step4" class="animButton" onclick="goToStep(4)"><img src="anim5.png"></button>
+<button class="animButton" onclick="goToStep(0)"><img src="anim1.png"></button> <button class="animButton" onclick="goToStep(1)"><img src="anim2.png"></button> <button class="animButton" onclick="goToStep(2)"><img src="anim3.png"></button> <button class="animButton" onclick="goToStep(3)"><img src="anim4.png"></button> <button class="animButton" onclick="goToStep(4)"><img src="anim5.png"></button>
 
 <button class="reset" onclick="resetAll()">RESET</button>
 
+<!-- 🔥 PULSANTE MOSTRA/NASCONDI SLIDER -->
+
+<button class="timeline-button" onclick="toggleTimeline()">TIMELINE</button>
+
 </div>
 </div>
 
-<!-- COLORI STRUCTURE -->
+<!-- 🔥 SLIDER TIMELINE -->
+
+<div id="timelineContainer" class="timeline-container">
+
+<input type="range"
+id="timelineSlider"
+class="timeline-slider"
+min="0"
+max="5"   <!-- 🔥 CAMBIA QUESTO con durata animazione -->
+step="0.01"
+value="0">
+
+</div>
+
+<!-- COLORI -->
 
 <div class="controls-section">
-<h3>Structure Color</h3>
-
 <div class="controls">
 <button class="color green" onclick="changeColor(0,[0,0.1,0,1])">Verde</button>
 <button class="color blue" onclick="changeColor(0,[0,0,0.18,1])">Blu</button>
 <button class="color orange" onclick="changeColor(0,[1,0.12,0,1])">Arancio</button>
-<button class="color lightgray" onclick="changeColor(0,[0.55,0.55,0.55,1])">Grigio</button>
-<button class="color darkgray" onclick="changeColor(0,[0.25,0.25,0.25,1])">Scuro</button>
-<button class="color red" onclick="changeColor(0,[0.22,0,0,1])">Rosso</button>
-</div>
-</div>
-
-<!-- COLORI MOBILE -->
-
-<div class="controls-section">
-<h3>Mobile Parts</h3>
-
-<div class="controls">
-<button class="color green" onclick="changeColor(2,[0,0.1,0,1])">Verde</button>
-<button class="color blue" onclick="changeColor(2,[0,0,1,1])">Blu</button>
-<button class="color yellow" onclick="changeColor(2,[1,1,0,1])">Giallo</button>
-<button class="color lightgray" onclick="changeColor(2,[0.55,0.55,0.55,1])">Grigio</button>
-<button class="color darkgray" onclick="changeColor(2,[0.33,0.33,0.33,1])">Scuro</button>
-<button class="color red" onclick="changeColor(2,[1,0,0,1])">Rosso</button>
 </div>
 </div>
 
 <script>
 
 const modelViewer=document.querySelector("#viewer")
+const slider=document.getElementById("timelineSlider")
+const timelineContainer=document.getElementById("timelineContainer")
 
 let animations=[]
 let currentStep=0
 
+/* 🔥 METTI QUI I TUOI STEP (secondi reali) */
+let stepTimes=[0,1,2,3,4]
+
 modelViewer.addEventListener("load",()=>{
 animations=modelViewer.availableAnimations
+
+/* 🔥 AUTO SET DURATA ANIMAZIONE */
+slider.max = modelViewer.duration
 })
 
-/* 🔥 METTI QUI I TUOI SECONDI */
-let stepTimes = [5, 10, 20, 25, 300]
+/* STEP SYSTEM */
 
 function goToStep(step){
 
 if(!animations.length) return
 
-const anim = animations[0]
+const anim=animations[0]
 
-// 🔥 FORZA SEMPRE LA STESSA ANIMAZIONE
-modelViewer.animationName = anim
-
+modelViewer.animationName=anim
 modelViewer.play()
 
-const targetTime = stepTimes[step]
+const targetTime=stepTimes[step]
 
-const interval = setInterval(()=>{
+const interval=setInterval(()=>{
 
-if(modelViewer.currentTime >= targetTime){
+if(modelViewer.currentTime>=targetTime){
 modelViewer.pause()
 clearInterval(interval)
 }
 
 },16)
 
-updateButtons(step)
-currentStep = step
+currentStep=step
 }
 
-function updateButtons(activeStep){
-
-for(let i=0;i<stepTimes.length;i++){
-const b=document.getElementById("step"+i)
-if(b) b.classList.remove("active")
-}
-
-const active=document.getElementById("step"+activeStep)
-if(active) active.classList.add("active")
-}
+/* RESET */
 
 function resetAll(){
 
 if(!animations.length) return
 
-const anim = animations[0]
+const anim=animations[0]
 
-modelViewer.animationName = anim
-modelViewer.currentTime = 0
+modelViewer.animationName=anim
+modelViewer.currentTime=0
 modelViewer.pause()
 
-currentStep = 0
-updateButtons(0)
+slider.value=0
 }
+
+/* 🔥 TOGGLE SLIDER */
+
+function toggleTimeline(){
+
+timelineContainer.classList.toggle("active")
+
+}
+
+/* 🔥 CONTROLLO SLIDER → MODELLO */
+
+slider.addEventListener("input",()=>{
+
+if(!animations.length) return
+
+const anim=animations[0]
+
+modelViewer.animationName=anim
+modelViewer.currentTime=slider.value
+modelViewer.pause()
+
+})
+
+/* 🔥 SINCRONIZZA MODELLO → SLIDER */
+
+modelViewer.addEventListener("timeupdate",()=>{
+slider.value=modelViewer.currentTime
+})
+
+/* COLORI */
 
 function changeColor(materialIndex,rgba){
 
