@@ -7,7 +7,6 @@
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
-<style>
 body{
 margin:0;
 background:#000;
@@ -23,11 +22,28 @@ width:95vw;
 height:75vh;
 }
 
+/* AR button */
+
+model-viewer::part(default-ar-button){
+width:110px;
+height:110px;
+border-radius:50%;
+background:white;
+}
+
+/* CONTROLLI */
+
 .controls-section{
 display:flex;
 align-items:center;
 margin:12px 0;
 width:95vw;
+}
+
+.controls-section h3{
+margin-right:15px;
+font-size:1.6rem;
+min-width:170px;
 }
 
 .controls{
@@ -158,14 +174,32 @@ value="0">
 
 </div>
 
-<!-- COLORI -->
+<!-- STRUCTURE COLOR -->
 
 <div class="controls-section">
+
+<h3>Structure Color</h3>
+
 <div class="controls">
-<button class="color green" onclick="changeColor(0,[0,0.1,0,1])">Verde</button>
-<button class="color blue" onclick="changeColor(0,[0,0,0.18,1])">Blu</button>
-<button class="color orange" onclick="changeColor(0,[1,0.12,0,1])">Arancio</button>
+
+<button class="color green" onclick="changeColor(0,[0,0.1,0,1])">Verde</button> <button class="color blue" onclick="changeColor(0,[0,0,0.18,1])">Blu</button> <button class="color orange" onclick="changeColor(0,[1,0.12,0,1])">Arancio</button> <button class="color lightgray" onclick="changeColor(0,[0.55,0.55,0.55,1])">Grigio chiaro</button> <button class="color darkgray" onclick="changeColor(0,[0.25,0.25,0.25,1])">Grigio scuro</button> <button class="color red" onclick="changeColor(0,[0.22,0,0,1])">Rosso</button>
+
 </div>
+
+</div>
+
+<!-- MOBILE PARTS -->
+
+<div class="controls-section">
+
+<h3>Mobile Parts Color</h3>
+
+<div class="controls">
+
+<button class="color green" onclick="changeColor(2,[0,0.1,0,1])">Verde</button> <button class="color blue" onclick="changeColor(2,[0,0,1,1])">Blu</button> <button class="color yellow" onclick="changeColor(2,[1,1,0,1])">Giallo</button> <button class="color lightgray" onclick="changeColor(2,[0.55,0.55,0.55,1])">Grigio chiaro</button> <button class="color darkgray" onclick="changeColor(2,[0.33,0.33,0.33,1])">Grigio scuro</button> <button class="color red" onclick="changeColor(2,[1,0,0,1])">Rosso</button>
+
+</div>
+
 </div>
 
 <script>
@@ -255,14 +289,16 @@ modelViewer.addEventListener("timeupdate",()=>{
 slider.value=modelViewer.currentTime
 })
 
-/* COLORI */
+/* cambio colore */
 
 function changeColor(materialIndex,rgba){
 
 const material=modelViewer.model.materials[materialIndex]
 
 if(material && material.pbrMetallicRoughness){
+
 material.pbrMetallicRoughness.setBaseColorFactor(rgba)
+
 }
 
 }
