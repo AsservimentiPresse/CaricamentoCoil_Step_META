@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>ASSIEME - STEP PUZZLE</title>
+<title>ASSIEME - AR Viewer</title>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
@@ -33,13 +33,17 @@ margin:12px 0;
 width:95vw;
 }
 
+.controls-section h3{
+margin-right:15px;
+font-size:1.6rem;
+min-width:170px;
+}
+
 .controls{
 display:flex;
 flex-wrap:wrap;
 gap:15px;
 }
-
-/* BOTTONI */
 
 .animButton{
 width:90px;
@@ -70,8 +74,26 @@ border-radius:12px;
 border:none;
 background:#444;
 color:white;
+font-size:1.1rem;
 cursor:pointer;
 }
+
+button.color{
+padding:12px 22px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-size:1rem;
+color:white;
+}
+
+.green{background:green;}
+.blue{background:blue;}
+.yellow{background:yellow;color:black;}
+.lightgray{background:lightgray;color:black;}
+.darkgray{background:dimgray;}
+.red{background:red;}
+.orange{background:orange;}
 
 </style>
 
@@ -85,11 +107,15 @@ src="linea lunga PROVA ANIMAZIONI.glb"
 ar
 ar-modes="webxr scene-viewer quick-look"
 camera-controls
-orientation="0deg 180deg 0deg"
+orientation="180deg 180deg 0deg"
 shadow-intensity="0"
 exposure="0.5"> </model-viewer>
 
+<!-- STEP BUTTONS -->
+
 <div class="controls-section">
+
+<h3>Steps</h3>
 
 <div class="controls">
 
@@ -121,17 +147,37 @@ exposure="0.5"> </model-viewer>
 
 <script>
 
-const modelViewer = document.querySelector("#viewer")
+const modelViewer=document.querySelector("#viewer")
 
-let animations = []
-let currentStep = 0
+let animations=[]
+let currentStep=0
 
-// ⚠️ DA PERSONALIZZARE
-let stepTimes = [0, 1, 2, 3, 4]
-
-modelViewer.addEventListener("load", ()=>{
-  animations = modelViewer.availableAnimations
+modelViewer.addEventListener("load",()=>{
+  animations=modelViewer.availableAnimations
 })
+
+/* ===============================
+   🔥 QUI DEVI INSERIRE I SECONDI
+   ===============================
+
+   ESEMPIO:
+   0 = stato iniziale
+   1.2 = fine step 1
+   2.5 = fine step 2
+   ecc...
+
+   👉 CAMBIA QUESTI VALORI!
+*/
+
+let stepTimes = [
+  0,    // STEP 0 (inizio)
+  1,    // STEP 1  <-- MODIFICA QUI
+  2,    // STEP 2  <-- MODIFICA QUI
+  3,    // STEP 3  <-- MODIFICA QUI
+  4     // STEP 4  <-- MODIFICA QUI
+]
+
+/* =============================== */
 
 function goToStep(step){
 
@@ -140,7 +186,6 @@ function goToStep(step){
   const anim = animations[0]
 
   modelViewer.animationName = anim
-
   modelViewer.play()
 
   const targetTime = stepTimes[step]
@@ -161,14 +206,15 @@ function goToStep(step){
 function updateButtons(activeStep){
 
   for(let i=0;i<stepTimes.length;i++){
-    const b = document.getElementById("step"+i)
+    const b=document.getElementById("step"+i)
     if(b) b.classList.remove("active")
   }
 
-  const active = document.getElementById("step"+activeStep)
+  const active=document.getElementById("step"+activeStep)
   if(active) active.classList.add("active")
-
 }
+
+/* RESET */
 
 function resetAll(){
 
@@ -182,6 +228,17 @@ function resetAll(){
 
   currentStep = 0
   updateButtons(0)
+}
+
+/* COLORI (UGUALE A PRIMA) */
+
+function changeColor(materialIndex,rgba){
+
+const material=modelViewer.model.materials[materialIndex]
+
+if(material && material.pbrMetallicRoughness){
+material.pbrMetallicRoughness.setBaseColorFactor(rgba)
+}
 
 }
 
