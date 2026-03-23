@@ -1,3 +1,4 @@
+Smart AR Asservimentipresse
 <!DOCTYPE html>
 
 <html>
@@ -33,8 +34,6 @@ width:110px;
 height:110px;
 border-radius:50%;
 background-color: white;
-color: black;
-font-size: 2rem;
 }
 
 /* ===== CONTROLLI ===== */
@@ -46,19 +45,13 @@ margin:12px 0;
 width:95vw;
 }
 
-.controls-section h3{
-margin-right:15px;
-font-size:1.6rem;
-min-width:170px;
-}
-
 .controls{
 display:flex;
 flex-wrap:wrap;
 gap:15px;
 }
 
-/* ===== BOTTONI STEP ===== */
+/* ===== BOTTONI ===== */
 
 .animButton{
 width:140px;
@@ -79,12 +72,10 @@ height:100%;
 object-fit: cover;
 }
 
-/* evidenziazione step attivo */
 .animButton.active{
 outline:4px solid white;
 }
 
-/* reset */
 .reset{
 padding:14px 24px;
 border-radius:12px;
@@ -94,7 +85,7 @@ color:white;
 cursor:pointer;
 }
 
-/* ===== TIMELINE (SOLO INDICATORE) ===== */
+/* ===== TIMELINE ===== */
 
 .timeline-container{
 display:none;
@@ -108,10 +99,9 @@ margin-top:10px;
 display:flex;
 }
 
-/* slider disabilitato (solo lettura) */
 .timeline-slider{
 width:100%;
-pointer-events:none; /* 🔥 NON INTERATTIVO */
+pointer-events:none;
 opacity:0.7;
 }
 
@@ -132,7 +122,6 @@ padding:12px 22px;
 border:none;
 border-radius:12px;
 cursor:pointer;
-font-size:1rem;
 color:white;
 }
 
@@ -142,7 +131,7 @@ color:white;
 .lightgray { background: lightgray; color: black; }
 .darkgray { background: dimgray; }
 .red { background: red; }
-.orange { background: orange; color: white; }
+.orange { background: orange; }
 
 </style>
 
@@ -150,7 +139,7 @@ color:white;
 
 <body>
 
-<!-- ===== MODELLO 3D ===== -->
+<!-- ===== MODEL ===== -->
 
 <model-viewer
 id="viewer"
@@ -167,15 +156,9 @@ exposure="0.5"> </model-viewer>
 <div class="controls-section">
 <div class="controls">
 
-<!-- ogni pulsante va a un punto della timeline -->
-
 <button id="step0" class="animButton" onclick="goToStep(0)"><img src="anim1.png"></button> <button id="step1" class="animButton" onclick="goToStep(1)"><img src="anim2.png"></button> <button id="step2" class="animButton" onclick="goToStep(2)"><img src="anim3.png"></button> <button id="step3" class="animButton" onclick="goToStep(3)"><img src="anim4.png"></button> <button id="step4" class="animButton" onclick="goToStep(4)"><img src="anim5.png"></button>
 
-<button class="reset" onclick="resetAll()">RESET</button>
-
-<!-- mostra/nasconde timeline -->
-
-<button class="timeline-button" onclick="toggleTimeline()">TIMELINE</button>
+<button class="reset" onclick="resetAll()">RESET</button> <button class="timeline-button" onclick="toggleTimeline()">TIMELINE</button>
 
 </div>
 </div>
@@ -183,46 +166,10 @@ exposure="0.5"> </model-viewer>
 <!-- ===== TIMELINE ===== -->
 
 <div id="timelineContainer" class="timeline-container">
-
-<input type="range"
-id="timelineSlider"
-class="timeline-slider"
-min="0"
-max="35.4"
-step="0.01"
-value="0">
-
-</div>
-
-<!-- ===== COLORI ===== -->
-
-<div class="controls-section">
-<h3>Structure Color</h3>
-<div class="controls">
-<button class="green" onclick="changeColor(0,[0,0.1,0,1])">Verde</button>
-<button class="blue" onclick="changeColor(0,[0,0,0.18,1])">Blu</button>
-<button class="orange" onclick="changeColor(0,[1,0.12,0,1])">Arancio</button>
-<button class="lightgray" onclick="changeColor(0,[0.55,0.55,0.55,1])">Grigio</button>
-<button class="darkgray" onclick="changeColor(0,[0.25,0.25,0.25,1])">Scuro</button>
-<button class="red" onclick="changeColor(0,[0.22,0,0,1])">Rosso</button>
-</div>
-</div>
-
-<div class="controls-section">
-<h3>Mobile Parts Color</h3>
-<div class="controls">
-<button class="green" onclick="changeColor(2,[0,0.1,0,1])">Verde</button>
-<button class="blue" onclick="changeColor(2,[0,0,1,1])">Blu</button>
-<button class="yellow" onclick="changeColor(2,[1,1,0,1])">Giallo</button>
-<button class="lightgray" onclick="changeColor(2,[0.55,0.55,0.55,1])">Grigio</button>
-<button class="darkgray" onclick="changeColor(2,[0.33,0.33,0.33,1])">Scuro</button>
-<button class="red" onclick="changeColor(2,[1,0,0,1])">Rosso</button>
-</div>
+<input type="range" id="timelineSlider" class="timeline-slider" min="0" max="35.4" step="0.01" value="0">
 </div>
 
 <script>
-
-/* ===== RIFERIMENTI ===== */
 
 const modelViewer=document.querySelector("#viewer")
 const slider=document.getElementById("timelineSlider")
@@ -230,43 +177,35 @@ const timelineContainer=document.getElementById("timelineContainer")
 
 let animations=[]
 
-/* ===== STEP TIMES (MODIFICA QUI) ===== */
-
+/* STEP TIMES */
 let stepTimes=[4,13,23,31,35.4]
 
-/* ===== LOAD MODEL ===== */
+/* LOAD */
 
 modelViewer.addEventListener("load",()=>{
 
 animations=modelViewer.availableAnimations
 
-// forza animazione attiva
 if(animations.length){
 modelViewer.animationName=animations[0]
 modelViewer.play()
 }
 
-// imposta durata slider
 slider.max=modelViewer.duration
 
 })
 
-/* ===== VAI A STEP ===== */
+/* STEP LOGIC CORRETTA (PUZZLE) */
 
 function goToStep(step){
 
 if(!animations.length) return
 
-const anim=animations[0]
-
-// reset timeline
-modelViewer.animationName=anim
-modelViewer.currentTime=0
-modelViewer.play()
-
 const targetTime=stepTimes[step]
 
-// fermati al punto giusto
+// NON resetta più → continua da dove sei
+modelViewer.play()
+
 const interval=setInterval(()=>{
 
 if(modelViewer.currentTime>=targetTime){
@@ -276,12 +215,11 @@ clearInterval(interval)
 
 },16)
 
-// highlight
 updateButtons(step)
 
 }
 
-/* ===== HIGHLIGHT ===== */
+/* HIGHLIGHT */
 
 function updateButtons(activeStep){
 
@@ -297,36 +235,29 @@ if(active) active.classList.add("active")
 
 }
 
-/* ===== RESET ===== */
+/* RESET */
 
 function resetAll(){
 
-if(!animations.length) return
-
-const anim=animations[0]
-
-modelViewer.animationName=anim
 modelViewer.currentTime=0
 modelViewer.pause()
 
 slider.value=0
 
-// 🔥 NESSUN HIGHLIGHT
 updateButtons(null)
 
 }
 
-/* ===== TOGGLE TIMELINE ===== */
+/* TIMELINE TOGGLE */
 
 function toggleTimeline(){
 timelineContainer.classList.toggle("active")
 }
 
-/* ===== TIMELINE INDICATORE ===== */
+/* TIMELINE INDICATORE */
 
 function updateSlider(){
 
-// aggiorna posizione slider
 slider.value=modelViewer.currentTime || 0
 
 requestAnimationFrame(updateSlider)
@@ -334,18 +265,6 @@ requestAnimationFrame(updateSlider)
 }
 
 updateSlider()
-
-/* ===== COLORI ===== */
-
-function changeColor(materialIndex,rgba){
-
-const material=modelViewer.model.materials[materialIndex]
-
-if(material && material.pbrMetallicRoughness){
-material.pbrMetallicRoughness.setBaseColorFactor(rgba)
-}
-
-}
 
 </script>
 
