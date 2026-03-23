@@ -4,12 +4,14 @@ Smart AR Asservimentipresse
 <html>
 <head>
 <meta charset="utf-8">
-<title>Smart AR Coil Load</title>
+<title>ASSIEME - AR Viewer</title>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  
-/* ===== BASE ===== */
+
 <style>
+
+/* ===== BASE ===== */
+
 body{
 margin:0;
 background:#000;
@@ -54,6 +56,7 @@ display:flex;
 flex-wrap:wrap;
 gap:15px;
 }
+
 /* ===== BOTTONI STEP ===== */
 
 .animButton{
@@ -122,7 +125,7 @@ cursor:pointer;
 
 /* ===== COLORI ===== */
 
-button.{
+button.color{
 padding:12px 22px;
 border:none;
 border-radius:12px;
@@ -145,7 +148,7 @@ color:white;
 
 <body>
 
-//<!-- ===== MODELLO ===== -->
+<!-- ===== MODELLO ===== -->
 
 <model-viewer
 id="viewer"
@@ -160,7 +163,9 @@ exposure="0.5"> </model-viewer>
 <!-- ===== STEP BUTTONS ===== -->
 
 <div class="controls-section">
-<h3></h3>
+
+<h3>Steps</h3>
+
 <div class="controls">
 
 <button id="step0" class="animButton" onclick="goToStep(0)"><img src="anim1.png"></button> <button id="step1" class="animButton" onclick="goToStep(1)"><img src="anim2.png"></button> <button id="step2" class="animButton" onclick="goToStep(2)"><img src="anim3.png"></button> <button id="step3" class="animButton" onclick="goToStep(3)"><img src="anim4.png"></button> <button id="step4" class="animButton" onclick="goToStep(4)"><img src="anim5.png"></button>
@@ -322,3 +327,4 @@ material.pbrMetallicRoughness.setBaseColorFactor(rgba)
 
 </body>
 </html>
+
