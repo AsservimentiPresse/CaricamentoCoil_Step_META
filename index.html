@@ -3,20 +3,19 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>ASSIEME - AR Viewer</title>
+<title>Smart AR Coil Load</title>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 <style>
-
 body{
-margin:0;
-background:#000;
-display:flex;
-flex-direction:column;
-align-items:center;
-color:white;
-font-family:sans-serif;
+margin: 0;
+background: #000;
+display: flex;
+flex-direction: column;
+align-items: center;
+color: white;
+font-family: sans-serif;
 }
 
 model-viewer{
@@ -24,16 +23,14 @@ width:95vw;
 height:75vh;
 }
 
-/* AR button */
-
 model-viewer::part(default-ar-button){
 width:110px;
 height:110px;
 border-radius:50%;
-background:white;
+background-color: white;
+color: black;
+font-size: 2rem;
 }
-
-/* CONTROLLI */
 
 .controls-section{
 display:flex;
@@ -54,11 +51,9 @@ flex-wrap:wrap;
 gap:15px;
 }
 
-/* BOTTONI */
-
 .animButton{
-width:90px;
-height:90px;
+width:140px;
+height:120px;
 border:none;
 border-radius:14px;
 overflow:hidden;
@@ -72,7 +67,7 @@ justify-content:center;
 .animButton img{
 width:100%;
 height:100%;
-object-fit:cover;
+object-fit: cover;
 }
 
 .animButton.active{
@@ -85,30 +80,8 @@ border-radius:12px;
 border:none;
 background:#444;
 color:white;
-font-size:1.1rem;
 cursor:pointer;
 }
-
-/* COLORI */
-
-button.color{
-padding:12px 22px;
-border:none;
-border-radius:12px;
-cursor:pointer;
-font-size:1rem;
-color:white;
-}
-
-.green{background:green;}
-.blue{background:blue;}
-.yellow{background:yellow;color:black;}
-.lightgray{background:lightgray;color:black;}
-.darkgray{background:dimgray;}
-.red{background:red;}
-.orange{background:orange;}
-
-/* 🔥 SLIDER */
 
 .timeline-container{
 display:none;
@@ -127,7 +100,7 @@ width:100%;
 }
 
 .timeline-button{
-margin-left:10px;
+margin-top:10px;
 padding:10px 20px;
 background:#666;
 border:none;
@@ -136,6 +109,22 @@ color:white;
 cursor:pointer;
 }
 
+button {
+padding:12px 22px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-size:1rem;
+color:white;
+}
+
+.green { background: green; }
+.blue { background: blue; }
+.yellow { background: yellow; color: grey;}
+.lightgray { background: lightgray; color: black; }
+.darkgray { background: dimgray; }
+.red { background: red; }
+.orange { background: orange; color: white; }
 </style>
 
 </head>
@@ -144,7 +133,7 @@ cursor:pointer;
 
 <model-viewer
 id="viewer"
-src="linea lunga PROVA ANIMAZIONI.glb"
+src="linea lunga_V4.glb"
 ar
 ar-modes="webxr scene-viewer quick-look"
 camera-controls
@@ -152,27 +141,21 @@ orientation="180deg 180deg 0deg"
 shadow-intensity="0"
 exposure="0.5"> </model-viewer>
 
-<!-- STEP -->
+<!-- STEP BUTTONS -->
 
 <div class="controls-section">
-
-<h3>Steps</h3>
-
 <div class="controls">
 
 <button id="step0" class="animButton" onclick="goToStep(0)"><img src="anim1.png"></button> <button id="step1" class="animButton" onclick="goToStep(1)"><img src="anim2.png"></button> <button id="step2" class="animButton" onclick="goToStep(2)"><img src="anim3.png"></button> <button id="step3" class="animButton" onclick="goToStep(3)"><img src="anim4.png"></button> <button id="step4" class="animButton" onclick="goToStep(4)"><img src="anim5.png"></button>
 
 <button class="reset" onclick="resetAll()">RESET</button>
 
-<!-- 🔥 TOGGLE SLIDER -->
-
 <button class="timeline-button" onclick="toggleTimeline()">TIMELINE</button>
 
 </div>
-
 </div>
 
-<!-- 🔥 SLIDER -->
+<!-- SLIDER -->
 
 <div id="timelineContainer" class="timeline-container">
 
@@ -186,32 +169,30 @@ value="0">
 
 </div>
 
-<!-- STRUCTURE COLOR -->
+<!-- COLORI (UGUALE) -->
 
 <div class="controls-section">
-
 <h3>Structure Color</h3>
-
 <div class="controls">
-
-<button class="color green" onclick="changeColor(0,[0,0.1,0,1])">Verde</button> <button class="color blue" onclick="changeColor(0,[0,0,0.18,1])">Blu</button> <button class="color orange" onclick="changeColor(0,[1,0.12,0,1])">Arancio</button> <button class="color lightgray" onclick="changeColor(0,[0.55,0.55,0.55,1])">Grigio chiaro</button> <button class="color darkgray" onclick="changeColor(0,[0.25,0.25,0.25,1])">Grigio scuro</button> <button class="color red" onclick="changeColor(0,[0.22,0,0,1])">Rosso</button>
-
+<button class="green" onclick="changeColor(0,[0,0.1,0,1])">Verde</button>
+<button class="blue" onclick="changeColor(0,[0,0,0.18,1])">Blu</button>
+<button class="orange" onclick="changeColor(0,[1,0.12,0,1])">Arancio</button>
+<button class="lightgray" onclick="changeColor(0,[0.55,0.55,0.55,1])">Grigio</button>
+<button class="darkgray" onclick="changeColor(0,[0.25,0.25,0.25,1])">Scuro</button>
+<button class="red" onclick="changeColor(0,[0.22,0,0,1])">Rosso</button>
 </div>
-
 </div>
-
-<!-- MOBILE PARTS -->
 
 <div class="controls-section">
-
 <h3>Mobile Parts Color</h3>
-
 <div class="controls">
-
-<button class="color green" onclick="changeColor(2,[0,0.1,0,1])">Verde</button> <button class="color blue" onclick="changeColor(2,[0,0,1,1])">Blu</button> <button class="color yellow" onclick="changeColor(2,[1,1,0,1])">Giallo</button> <button class="color lightgray" onclick="changeColor(2,[0.55,0.55,0.55,1])">Grigio chiaro</button> <button class="color darkgray" onclick="changeColor(2,[0.33,0.33,0.33,1])">Grigio scuro</button> <button class="color red" onclick="changeColor(2,[1,0,0,1])">Rosso</button>
-
+<button class="green" onclick="changeColor(2,[0,0.1,0,1])">Verde</button>
+<button class="blue" onclick="changeColor(2,[0,0,1,1])">Blu</button>
+<button class="yellow" onclick="changeColor(2,[1,1,0,1])">Giallo</button>
+<button class="lightgray" onclick="changeColor(2,[0.55,0.55,0.55,1])">Grigio</button>
+<button class="darkgray" onclick="changeColor(2,[0.33,0.33,0.33,1])">Scuro</button>
+<button class="red" onclick="changeColor(2,[1,0,0,1])">Rosso</button>
 </div>
-
 </div>
 
 <script>
@@ -222,8 +203,8 @@ const timelineContainer=document.getElementById("timelineContainer")
 
 let animations=[]
 
-/* 🔥 METTI QUI I TUOI TEMPI */
-let stepTimes=[0,5,10,20,30]
+/* 🔥 I TUOI STEP */
+let stepTimes=[4,13,23,31,35.4]
 
 modelViewer.addEventListener("load",()=>{
 animations=modelViewer.availableAnimations
@@ -253,7 +234,7 @@ clearInterval(interval)
 updateButtons(step)
 }
 
-/* 🔥 HIGHLIGHT */
+/* 🔥 HIGHLIGHT BOTTONI */
 
 function updateButtons(activeStep){
 
@@ -282,13 +263,13 @@ slider.value=0
 updateButtons(0)
 }
 
-/* 🔥 TOGGLE */
+/* TOGGLE */
 
 function toggleTimeline(){
 timelineContainer.classList.toggle("active")
 }
 
-/* 🔥 SLIDER CONTROL */
+/* 🔥 SLIDER FIXATO */
 
 slider.addEventListener("input",()=>{
 
@@ -297,10 +278,11 @@ if(!animations.length) return
 const anim=animations[0]
 
 modelViewer.animationName=anim
+
+/* 🔥 MUOVE LA TIMELINE SENZA BLOCCARE */
 modelViewer.currentTime=parseFloat(slider.value)
 
-/* 🔥 AUTO HIGHLIGHT */
-
+/* 🔥 TROVA STEP PIÙ VICINO */
 let closest=0
 let min=Infinity
 
@@ -316,7 +298,7 @@ updateButtons(closest)
 
 })
 
-/* 🔥 SYNC MODEL → SLIDER */
+/* 🔥 SYNC CORRETTO */
 
 modelViewer.addEventListener("timeupdate",()=>{
 
@@ -342,4 +324,3 @@ material.pbrMetallicRoughness.setBaseColorFactor(rgba)
 
 </body>
 </html>
-
