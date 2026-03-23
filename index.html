@@ -1,9 +1,10 @@
 Smart AR Asservimentipresse
 <!DOCTYPE html>
+
 <html>
 <head>
 <meta charset="utf-8">
-<title>Smart AR Asservimentipresse</title>
+<title>ASSIEME - AR Viewer</title>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
@@ -147,6 +148,8 @@ color:white;
 
 <body>
 
+<!-- ===== MODELLO ===== -->
+
 <model-viewer
 id="viewer"
 src="linea lunga_V4.glb"
@@ -155,8 +158,9 @@ ar-modes="webxr scene-viewer quick-look"
 camera-controls
 orientation="180deg 180deg 0deg"
 shadow-intensity="0"
-exposure="0.5">
-</model-viewer>
+exposure="0.5"> </model-viewer>
+
+<!-- ===== STEP BUTTONS ===== -->
 
 <div class="controls-section">
 
@@ -175,6 +179,8 @@ exposure="0.5">
 
 </div>
 
+<!-- ===== TIMELINE ===== -->
+
 <div id="timelineContainer" class="timeline-container">
 
 <input type="range"
@@ -186,6 +192,8 @@ step="0.01"
 value="0">
 
 </div>
+
+<!-- ===== STRUCTURE COLOR ===== -->
 
 <div class="controls-section">
 
@@ -203,6 +211,8 @@ value="0">
 </div>
 
 </div>
+
+<!-- ===== MOBILE PARTS COLOR ===== -->
 
 <div class="controls-section">
 
@@ -229,6 +239,7 @@ const timelineContainer=document.getElementById("timelineContainer")
 
 let animations=[]
 
+/* STEP TIMES */
 let stepTimes=[4,13,23,31,35.4]
 
 /* LOAD */
@@ -240,7 +251,7 @@ animations=modelViewer.availableAnimations
 if(animations.length){
 modelViewer.animationName=animations[0]
 
-// 🔥 trick: avvio e stop immediato
+// ✅ FIX: inizializzazione invisibile
 modelViewer.play()
 
 requestAnimationFrame(()=>{
@@ -254,9 +265,7 @@ slider.max=modelViewer.duration
 
 })
 
-slider.max=modelViewer.duration
-
-})
+/* STEP SEQUENZIALE */
 
 function goToStep(step){
 
@@ -279,6 +288,8 @@ updateButtons(step)
 
 }
 
+/* HIGHLIGHT */
+
 function updateButtons(activeStep){
 
 for(let i=0;i<stepTimes.length;i++){
@@ -293,6 +304,8 @@ if(active) active.classList.add("active")
 
 }
 
+/* RESET */
+
 function resetAll(){
 
 modelViewer.currentTime=0
@@ -304,6 +317,8 @@ updateButtons(null)
 
 }
 
+/* TIMELINE */
+
 function toggleTimeline(){
 timelineContainer.classList.toggle("active")
 }
@@ -314,6 +329,8 @@ requestAnimationFrame(updateSlider)
 }
 
 updateSlider()
+
+/* COLORI */
 
 function changeColor(materialIndex,rgba){
 
