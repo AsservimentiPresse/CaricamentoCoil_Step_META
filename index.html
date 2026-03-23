@@ -1,10 +1,9 @@
 Smart AR Asservimentipresse
 <!DOCTYPE html>
-
 <html>
 <head>
 <meta charset="utf-8">
-<title>ASSIEME - AR Viewer</title>
+<title>Smart AR Asservimentipresse</title>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
@@ -148,8 +147,6 @@ color:white;
 
 <body>
 
-<!-- ===== MODELLO ===== -->
-
 <model-viewer
 id="viewer"
 src="linea lunga_V4.glb"
@@ -158,27 +155,25 @@ ar-modes="webxr scene-viewer quick-look"
 camera-controls
 orientation="180deg 180deg 0deg"
 shadow-intensity="0"
-exposure="0.5"> </model-viewer>
-
-<!-- ===== STEP BUTTONS ===== -->
+exposure="0.5">
+</model-viewer>
 
 <div class="controls-section">
 
-
-
 <div class="controls">
 
-<button id="step0" class="animButton" onclick="goToStep(0)"><img src="anim1.png"></button> <button id="step1" class="animButton" onclick="goToStep(1)"><img src="anim2.png"></button> <button id="step2" class="animButton" onclick="goToStep(2)"><img src="anim3.png"></button> <button id="step3" class="animButton" onclick="goToStep(3)"><img src="anim4.png"></button> <button id="step4" class="animButton" onclick="goToStep(4)"><img src="anim5.png"></button>
+<button id="step0" class="animButton" onclick="goToStep(0)"><img src="anim1.png"></button>
+<button id="step1" class="animButton" onclick="goToStep(1)"><img src="anim2.png"></button>
+<button id="step2" class="animButton" onclick="goToStep(2)"><img src="anim3.png"></button>
+<button id="step3" class="animButton" onclick="goToStep(3)"><img src="anim4.png"></button>
+<button id="step4" class="animButton" onclick="goToStep(4)"><img src="anim5.png"></button>
 
 <button class="reset" onclick="resetAll()">RESET</button>
-
 <button class="timeline-button" onclick="toggleTimeline()">TIMELINE</button>
 
 </div>
 
 </div>
-
-<!-- ===== TIMELINE ===== -->
 
 <div id="timelineContainer" class="timeline-container">
 
@@ -192,21 +187,22 @@ value="0">
 
 </div>
 
-<!-- ===== STRUCTURE COLOR ===== -->
-
 <div class="controls-section">
 
 <h3>Structure Color</h3>
 
 <div class="controls">
 
-<button class="color green" onclick="changeColor(0,[0,0.1,0,1])">Verde</button> <button class="color blue" onclick="changeColor(0,[0,0,0.18,1])">Blu</button> <button class="color orange" onclick="changeColor(0,[1,0.12,0,1])">Arancio</button> <button class="color lightgray" onclick="changeColor(0,[0.55,0.55,0.55,1])">Grigio chiaro</button> <button class="color darkgray" onclick="changeColor(0,[0.25,0.25,0.25,1])">Grigio scuro</button> <button class="color red" onclick="changeColor(0,[0.22,0,0,1])">Rosso</button>
+<button class="color green" onclick="changeColor(0,[0,0.1,0,1])">Verde</button>
+<button class="color blue" onclick="changeColor(0,[0,0,0.18,1])">Blu</button>
+<button class="color orange" onclick="changeColor(0,[1,0.12,0,1])">Arancio</button>
+<button class="color lightgray" onclick="changeColor(0,[0.55,0.55,0.55,1])">Grigio chiaro</button>
+<button class="color darkgray" onclick="changeColor(0,[0.25,0.25,0.25,1])">Grigio scuro</button>
+<button class="color red" onclick="changeColor(0,[0.22,0,0,1])">Rosso</button>
 
 </div>
 
 </div>
-
-<!-- ===== MOBILE PARTS COLOR ===== -->
 
 <div class="controls-section">
 
@@ -214,7 +210,12 @@ value="0">
 
 <div class="controls">
 
-<button class="color green" onclick="changeColor(2,[0,0.1,0,1])">Verde</button> <button class="color blue" onclick="changeColor(2,[0,0,1,1])">Blu</button> <button class="color yellow" onclick="changeColor(2,[1,1,0,1])">Giallo</button> <button class="color lightgray" onclick="changeColor(2,[0.55,0.55,0.55,1])">Grigio chiaro</button> <button class="color darkgray" onclick="changeColor(2,[0.33,0.33,0.33,1])">Grigio scuro</button> <button class="color red" onclick="changeColor(2,[1,0,0,1])">Rosso</button>
+<button class="color green" onclick="changeColor(2,[0,0.1,0,1])">Verde</button>
+<button class="color blue" onclick="changeColor(2,[0,0,1,1])">Blu</button>
+<button class="color yellow" onclick="changeColor(2,[1,1,0,1])">Giallo</button>
+<button class="color lightgray" onclick="changeColor(2,[0.55,0.55,0.55,1])">Grigio chiaro</button>
+<button class="color darkgray" onclick="changeColor(2,[0.33,0.33,0.33,1])">Grigio scuro</button>
+<button class="color red" onclick="changeColor(2,[1,0,0,1])">Rosso</button>
 
 </div>
 
@@ -228,7 +229,6 @@ const timelineContainer=document.getElementById("timelineContainer")
 
 let animations=[]
 
-/* STEP TIMES */
 let stepTimes=[4,13,23,31,35.4]
 
 /* LOAD */
@@ -239,14 +239,13 @@ animations=modelViewer.availableAnimations
 
 if(animations.length){
 modelViewer.animationName=animations[0]
-modelViewer.pause()
+modelViewer.pause() // ✅ NON PARTE AUTOMATICAMENTE
+modelViewer.currentTime = 0
 }
 
 slider.max=modelViewer.duration
 
 })
-
-/* STEP SEQUENZIALE (FIX) */
 
 function goToStep(step){
 
@@ -269,8 +268,6 @@ updateButtons(step)
 
 }
 
-/* HIGHLIGHT */
-
 function updateButtons(activeStep){
 
 for(let i=0;i<stepTimes.length;i++){
@@ -285,8 +282,6 @@ if(active) active.classList.add("active")
 
 }
 
-/* RESET */
-
 function resetAll(){
 
 modelViewer.currentTime=0
@@ -298,8 +293,6 @@ updateButtons(null)
 
 }
 
-/* TIMELINE */
-
 function toggleTimeline(){
 timelineContainer.classList.toggle("active")
 }
@@ -310,8 +303,6 @@ requestAnimationFrame(updateSlider)
 }
 
 updateSlider()
-
-/* COLORI */
 
 function changeColor(materialIndex,rgba){
 
@@ -327,4 +318,3 @@ material.pbrMetallicRoughness.setBaseColorFactor(rgba)
 
 </body>
 </html>
-
