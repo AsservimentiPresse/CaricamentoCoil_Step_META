@@ -1,3 +1,4 @@
+Smart AR
 <!DOCTYPE html>
 
 <html>
@@ -169,7 +170,7 @@ value="0">
 
 </div>
 
-<!-- COLORI (UGUALE) -->
+<!-- COLORI -->
 
 <div class="controls-section">
 <h3>Structure Color</h3>
@@ -203,7 +204,7 @@ const timelineContainer=document.getElementById("timelineContainer")
 
 let animations=[]
 
-/* 🔥 I TUOI STEP */
+/* STEP TIMES */
 let stepTimes=[4,13,23,31,35.4]
 
 modelViewer.addEventListener("load",()=>{
@@ -234,7 +235,7 @@ clearInterval(interval)
 updateButtons(step)
 }
 
-/* 🔥 HIGHLIGHT BOTTONI */
+/* HIGHLIGHT */
 
 function updateButtons(activeStep){
 
@@ -269,7 +270,7 @@ function toggleTimeline(){
 timelineContainer.classList.toggle("active")
 }
 
-/* 🔥 SLIDER FIXATO */
+/* SLIDER CONTROL */
 
 slider.addEventListener("input",()=>{
 
@@ -278,11 +279,10 @@ if(!animations.length) return
 const anim=animations[0]
 
 modelViewer.animationName=anim
-
-/* 🔥 MUOVE LA TIMELINE SENZA BLOCCARE */
 modelViewer.currentTime=parseFloat(slider.value)
 
-/* 🔥 TROVA STEP PIÙ VICINO */
+/* highlight automatico */
+
 let closest=0
 let min=Infinity
 
@@ -298,15 +298,19 @@ updateButtons(closest)
 
 })
 
-/* 🔥 SYNC CORRETTO */
+/* 🔥 FIX DEFINITIVO: SYNC CONTINUO */
 
-modelViewer.addEventListener("timeupdate",()=>{
+function updateSlider(){
 
 if(document.activeElement!==slider){
-slider.value=modelViewer.currentTime
+slider.value=modelViewer.currentTime || 0
 }
 
-})
+requestAnimationFrame(updateSlider)
+
+}
+
+updateSlider()
 
 /* COLORI */
 
@@ -324,3 +328,4 @@ material.pbrMetallicRoughness.setBaseColorFactor(rgba)
 
 </body>
 </html>
+
