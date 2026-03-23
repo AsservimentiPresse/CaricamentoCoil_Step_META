@@ -1,4 +1,3 @@
-Smart AR
 <!DOCTYPE html>
 
 <html>
@@ -9,6 +8,9 @@ Smart AR
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 <style>
+
+/* ===== BASE ===== */
+
 body{
 margin: 0;
 background: #000;
@@ -24,6 +26,8 @@ width:95vw;
 height:75vh;
 }
 
+/* ===== AR BUTTON ===== */
+
 model-viewer::part(default-ar-button){
 width:110px;
 height:110px;
@@ -32,6 +36,8 @@ background-color: white;
 color: black;
 font-size: 2rem;
 }
+
+/* ===== CONTROLLI ===== */
 
 .controls-section{
 display:flex;
@@ -52,6 +58,8 @@ flex-wrap:wrap;
 gap:15px;
 }
 
+/* ===== BOTTONI STEP ===== */
+
 .animButton{
 width:140px;
 height:120px;
@@ -71,10 +79,12 @@ height:100%;
 object-fit: cover;
 }
 
+/* evidenziazione step attivo */
 .animButton.active{
 outline:4px solid white;
 }
 
+/* reset */
 .reset{
 padding:14px 24px;
 border-radius:12px;
@@ -83,6 +93,8 @@ background:#444;
 color:white;
 cursor:pointer;
 }
+
+/* ===== TIMELINE (SOLO INDICATORE) ===== */
 
 .timeline-container{
 display:none;
@@ -96,8 +108,11 @@ margin-top:10px;
 display:flex;
 }
 
+/* slider disabilitato (solo lettura) */
 .timeline-slider{
 width:100%;
+pointer-events:none; /* 🔥 NON INTERATTIVO */
+opacity:0.7;
 }
 
 .timeline-button{
@@ -109,6 +124,8 @@ border-radius:10px;
 color:white;
 cursor:pointer;
 }
+
+/* ===== COLORI ===== */
 
 button {
 padding:12px 22px;
@@ -126,11 +143,14 @@ color:white;
 .darkgray { background: dimgray; }
 .red { background: red; }
 .orange { background: orange; color: white; }
+
 </style>
 
 </head>
 
 <body>
+
+<!-- ===== MODELLO 3D ===== -->
 
 <model-viewer
 id="viewer"
@@ -142,21 +162,25 @@ orientation="180deg 180deg 0deg"
 shadow-intensity="0"
 exposure="0.5"> </model-viewer>
 
-<!-- STEP BUTTONS -->
+<!-- ===== STEP BUTTONS ===== -->
 
 <div class="controls-section">
 <div class="controls">
 
+<!-- ogni pulsante va a un punto della timeline -->
+
 <button id="step0" class="animButton" onclick="goToStep(0)"><img src="anim1.png"></button> <button id="step1" class="animButton" onclick="goToStep(1)"><img src="anim2.png"></button> <button id="step2" class="animButton" onclick="goToStep(2)"><img src="anim3.png"></button> <button id="step3" class="animButton" onclick="goToStep(3)"><img src="anim4.png"></button> <button id="step4" class="animButton" onclick="goToStep(4)"><img src="anim5.png"></button>
 
 <button class="reset" onclick="resetAll()">RESET</button>
+
+<!-- mostra/nasconde timeline -->
 
 <button class="timeline-button" onclick="toggleTimeline()">TIMELINE</button>
 
 </div>
 </div>
 
-<!-- SLIDER -->
+<!-- ===== TIMELINE ===== -->
 
 <div id="timelineContainer" class="timeline-container">
 
@@ -170,7 +194,7 @@ value="0">
 
 </div>
 
-<!-- COLORI -->
+<!-- ===== COLORI ===== -->
 
 <div class="controls-section">
 <h3>Structure Color</h3>
@@ -198,19 +222,36 @@ value="0">
 
 <script>
 
+/* ===== RIFERIMENTI ===== */
+
 const modelViewer=document.querySelector("#viewer")
 const slider=document.getElementById("timelineSlider")
 const timelineContainer=document.getElementById("timelineContainer")
 
 let animations=[]
 
-/* STEP TIMES */
+/* ===== STEP TIMES (MODIFICA QUI) ===== */
+
 let stepTimes=[4,13,23,31,35.4]
 
+/* ===== LOAD MODEL ===== */
+
 modelViewer.addEventListener("load",()=>{
+
 animations=modelViewer.availableAnimations
+
+// forza animazione attiva
+if(animations.length){
+modelViewer.animationName=animations[0]
+modelViewer.play()
+}
+
+// imposta durata slider
 slider.max=modelViewer.duration
+
 })
+
+/* ===== VAI A STEP ===== */
 
 function goToStep(step){
 
@@ -218,11 +259,14 @@ if(!animations.length) return
 
 const anim=animations[0]
 
+// reset timeline
 modelViewer.animationName=anim
+modelViewer.currentTime=0
 modelViewer.play()
 
 const targetTime=stepTimes[step]
 
+// fermati al punto giusto
 const interval=setInterval(()=>{
 
 if(modelViewer.currentTime>=targetTime){
@@ -232,10 +276,12 @@ clearInterval(interval)
 
 },16)
 
+// highlight
 updateButtons(step)
+
 }
 
-/* HIGHLIGHT */
+/* ===== HIGHLIGHT ===== */
 
 function updateButtons(activeStep){
 
@@ -244,11 +290,14 @@ const b=document.getElementById("step"+i)
 if(b) b.classList.remove("active")
 }
 
+if(activeStep!==null){
 const active=document.getElementById("step"+activeStep)
 if(active) active.classList.add("active")
 }
 
-/* RESET */
+}
+
+/* ===== RESET ===== */
 
 function resetAll(){
 
@@ -261,50 +310,24 @@ modelViewer.currentTime=0
 modelViewer.pause()
 
 slider.value=0
-updateButtons(0)
+
+// 🔥 NESSUN HIGHLIGHT
+updateButtons(null)
+
 }
 
-/* TOGGLE */
+/* ===== TOGGLE TIMELINE ===== */
 
 function toggleTimeline(){
 timelineContainer.classList.toggle("active")
 }
 
-/* SLIDER CONTROL */
-
-slider.addEventListener("input",()=>{
-
-if(!animations.length) return
-
-const anim=animations[0]
-
-modelViewer.animationName=anim
-modelViewer.currentTime=parseFloat(slider.value)
-
-/* highlight automatico */
-
-let closest=0
-let min=Infinity
-
-for(let i=0;i<stepTimes.length;i++){
-let diff=Math.abs(stepTimes[i]-modelViewer.currentTime)
-if(diff<min){
-min=diff
-closest=i
-}
-}
-
-updateButtons(closest)
-
-})
-
-/* 🔥 FIX DEFINITIVO: SYNC CONTINUO */
+/* ===== TIMELINE INDICATORE ===== */
 
 function updateSlider(){
 
-if(document.activeElement!==slider){
+// aggiorna posizione slider
 slider.value=modelViewer.currentTime || 0
-}
 
 requestAnimationFrame(updateSlider)
 
@@ -312,7 +335,7 @@ requestAnimationFrame(updateSlider)
 
 updateSlider()
 
-/* COLORI */
+/* ===== COLORI ===== */
 
 function changeColor(materialIndex,rgba){
 
@@ -328,4 +351,3 @@ material.pbrMetallicRoughness.setBaseColorFactor(rgba)
 
 </body>
 </html>
-
