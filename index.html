@@ -239,9 +239,20 @@ animations=modelViewer.availableAnimations
 
 if(animations.length){
 modelViewer.animationName=animations[0]
+
+// 🔥 trick: avvio e stop immediato
+modelViewer.play()
+
+requestAnimationFrame(()=>{
+modelViewer.pause()
 modelViewer.currentTime = 0
-// niente play, niente pause forzata
+})
+
 }
+
+slider.max=modelViewer.duration
+
+})
 
 slider.max=modelViewer.duration
 
